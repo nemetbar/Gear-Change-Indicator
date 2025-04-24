@@ -1,5 +1,6 @@
 uint prevGear = -1;
 uint curGear = -1;
+bool upShift = true;
 
 uint animationTimer = 0;
 
@@ -26,18 +27,36 @@ void Render(){
     if (S_HideWithGame && !UI::IsGameUIVisible()) return;
 
     vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
-    vec2 relativePos = S_Position * screenSize;
+    vec2 relativePos = vec2(S_PositionX, S_PositionY) * screenSize;
+
+    vec2 arrowSize = vec2(S_Size / 2 - S_Size / 4, S_Size / 2);
+    float animationLength = S_Size / 2.5 + S_Size / 2.7;
+    float animationProgress = animationTimer / (S_AnimationLength * 1000);
+    vec2 arrowPos;
 
     if (animationTimer < S_AnimationLength * 1000){
-        nvg::BeginPath();
         nvg::TextAlign(nvg::Align::Center);
-        nvg::GlobalAlpha(1 - animationTimer / (S_AnimationLength * 1000));
-        nvg::FontSize(S_FontSize);
-        nvg::FillColor(S_FontColor);
+        nvg::GlobalAlpha(1 - animationProgress);
+        nvg::FontFace(5);
+        nvg::FontSize(S_Size);
+        nvg::FillColor(S_Color);
         nvg::Text(relativePos, "" + curGear);
+
+        nvg::BeginPath();
+        if (upShift)
+            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2.5) - vec2(0, animationProgress * animationLength);
+        else
+            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2.7) + vec2(0, animationProgress * animationLength);
+        nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0)); // Left point
+        nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));  // Right point
+        if (upShift)
+            nvg::LineTo(arrowPos + vec2(0, -arrowSize.y));
+        else
+            nvg::LineTo(arrowPos + vec2(0, arrowSize.y));
         nvg::ClosePath();
+
+        nvg::Fill();
     }
-    
 }
 
 void Update(uint deltaTime){
@@ -50,6 +69,11 @@ void Update(uint deltaTime){
     // check for gear change
     curGear = player.CurGear;
     if (prevGear != curGear){
+        if (prevGear > curGear)
+            upShift = false;
+        else
+            upShift = true;
+
         prevGear = curGear;
 
         animationTimer = 0;
