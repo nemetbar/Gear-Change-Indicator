@@ -17,25 +17,23 @@ void Main(){
 }
 
 void RenderMenu(){
-    if (UI::MenuItem("\\$1BA" + Icons::Kenney::Cog + "\\$G Gear-Change-Indicator", "", Setting_PluginEnabled))
-        Setting_PluginEnabled = !Setting_PluginEnabled;
+    if (UI::MenuItem("\\$1BA" + Icons::Kenney::Cog + "\\$G Gear-Change-Indicator", "", S_PluginEnabled))
+        S_PluginEnabled = !S_PluginEnabled;
 }
 
 void Render(){
-    if (!Setting_PluginEnabled) return;
-    if (Setting_HideWithGame && !UI::IsGameUIVisible()) return;
+    if (!S_PluginEnabled) return;
+    if (S_HideWithGame && !UI::IsGameUIVisible()) return;
 
     vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
-    vec2 relativePos = Setting_Position * screenSize;
+    vec2 relativePos = S_Position * screenSize;
 
-    if (animationTimer < Setting_AnimationLength * 1000){
+    if (animationTimer < S_AnimationLength * 1000){
         nvg::BeginPath();
-        nvg::TextAlign(2); // center
-        if (animationTimer < (Setting_AnimationLength * 1000) / 2)
-            nvg::GlobalAlpha(1);
-        else
-            nvg::GlobalAlpha((1 - animationTimer / (Setting_AnimationLength * 1000)) * 2);
-        nvg::FontSize(Setting_FontSize);
+        nvg::TextAlign(nvg::Align::Center);
+        nvg::GlobalAlpha(1 - animationTimer / (S_AnimationLength * 1000));
+        nvg::FontSize(S_FontSize);
+        nvg::FillColor(S_FontColor);
         nvg::Text(relativePos, "" + curGear);
         nvg::ClosePath();
     }
@@ -43,7 +41,7 @@ void Render(){
 }
 
 void Update(uint deltaTime){
-    if (!Setting_PluginEnabled) return;
+    if (!S_PluginEnabled) return;
 
     auto player = VehicleState::ViewingPlayerState();
     if (player is null) return;
@@ -57,7 +55,7 @@ void Update(uint deltaTime){
         animationTimer = 0;
     }
 
-    if (animationTimer < Setting_AnimationLength * 1000){
+    if (animationTimer < S_AnimationLength * 1000){
         animationTimer += deltaTime;
     }
 
