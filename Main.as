@@ -25,6 +25,7 @@ void RenderMenu(){
 void Render(){
     if (!S_PluginEnabled) return;
     if (S_HideWithGame && !UI::IsGameUIVisible()) return;
+    if (VehicleState::ViewingPlayerState() is null) return;
 
     vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
     vec2 relativePos = vec2(S_PositionX, S_PositionY) * screenSize;
@@ -42,6 +43,7 @@ void Render(){
         nvg::FillColor(S_Color);
         nvg::Text(relativePos, "" + curGear);
 
+        if (!S_ShowArrow) return;
         nvg::BeginPath();
         if (upShift)
             arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2.5) - vec2(0, animationProgress * animationLength);

@@ -18,3 +18,6 @@ vec4 S_Color = vec4(1, 1, 1, 1); // white
 
 [Setting category="Settings" name="Animation Length" min=0.1 max=2.0]
 float S_AnimationLength = 0.3; // seconds
+
+[Setting category="Settings" name="Show Arrow"]
+bool S_ShowArrow = true;
