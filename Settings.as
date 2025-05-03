@@ -10,7 +10,10 @@ float S_PositionX = 0.5;
 [Setting category="Settings" name="Indicator Position Y" min=0 max=1]
 float S_PositionY = 0.9;
 
-[Setting category="Settings" name="Size"]
+[Setting category="Settings" name="Draw Indicator to Help Position Change"]
+bool S_HelpPositionChange = false;
+
+[Setting category="Settings" name="Size" min=10 max=500]
 int S_Size = 50;
 
 [Setting category="Settings" name="Color" color]

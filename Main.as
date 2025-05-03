@@ -1,5 +1,5 @@
-uint prevGear = -1;
-uint curGear = -1;
+uint prevGear = 1;
+uint curGear = 1;
 bool upShift = true;
 
 uint animationTimer = 0;
@@ -31,9 +31,28 @@ void Render(){
     vec2 relativePos = vec2(S_PositionX, S_PositionY) * screenSize;
 
     vec2 arrowSize = vec2(S_Size / 2 - S_Size / 4, S_Size / 2);
-    float animationLength = S_Size / 2.5 + S_Size / 2.7;
+    float animationLength = S_Size * 0.6;
     float animationProgress = animationTimer / (S_AnimationLength * 1000);
     vec2 arrowPos;
+
+    if (S_HelpPositionChange){
+        nvg::TextAlign(nvg::Align::Center);
+        nvg::GlobalAlpha(1);
+        nvg::FontFace(5);
+        nvg::FontSize(S_Size);
+        nvg::FillColor(S_Color);
+        nvg::Text(relativePos, "2");
+
+        if (!S_ShowArrow) return;
+        nvg::BeginPath();
+        arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 4);
+        nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0));
+        nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));
+        nvg::LineTo(arrowPos + vec2(0, -arrowSize.y));
+        nvg::ClosePath();
+        nvg::Fill();
+        return;
+    }
 
     if (animationTimer < S_AnimationLength * 1000){
         nvg::TextAlign(nvg::Align::Center);
@@ -41,7 +60,10 @@ void Render(){
         nvg::FontFace(5);
         nvg::FontSize(S_Size);
         nvg::FillColor(S_Color);
-        nvg::Text(relativePos, "" + curGear);
+        if (curGear == 0)
+            nvg::Text(relativePos, "R");
+        else
+            nvg::Text(relativePos, "" + curGear);
 
         if (!S_ShowArrow) return;
         nvg::BeginPath();
