@@ -1,12 +1,13 @@
 # Gear Change Indicator
 
-TM2 style gear change indicator for Trackmania 2020
+Gear change indicator inspired by Nebula RPG server on TM2
 
 ## Features
 
-- Configurable position, size and color
+- Configurable position, size, color and animation length
 - Indicates every gear change
 - Cool animation based on shift direction :D
+- Arrow can be disabled
 
 Author: nemetbar
 
