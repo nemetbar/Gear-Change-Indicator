@@ -1,8 +1,7 @@
 [meta]
 name = "Gear Change Indicator"
 author = "nemetbar"
-version = "1.0"
-description = "TM2 style gear change indicator"
+version = "1.1"
 
 [script]
 dependencies = [ "VehicleState" ]
