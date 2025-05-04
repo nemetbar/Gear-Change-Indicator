@@ -2,6 +2,7 @@
 name = "Gear Change Indicator"
 author = "nemetbar"
 version = "1.1"
+category = "Overlay"
 
 [script]
 dependencies = [ "VehicleState" ]
