@@ -38,7 +38,7 @@ void Render(){
     if (S_HelpPositionChange){
         nvg::TextAlign(nvg::Align::Center);
         nvg::GlobalAlpha(1);
-        nvg::FontFace(5);
+        nvg::FontFace(nvg::LoadFont("Fonts/Oswald-Regular.ttf"));
         nvg::FontSize(S_Size);
         nvg::FillColor(S_Color);
         nvg::Text(relativePos, "2");
@@ -57,7 +57,7 @@ void Render(){
     if (animationTimer < S_AnimationLength * 1000){
         nvg::TextAlign(nvg::Align::Center);
         nvg::GlobalAlpha(1 - animationProgress);
-        nvg::FontFace(5);
+        nvg::FontFace(nvg::LoadFont("Fonts/Oswald-Regular.ttf"));
         nvg::FontSize(S_Size);
         nvg::FillColor(S_Color);
         if (curGear == 0)
@@ -68,9 +68,9 @@ void Render(){
         if (!S_ShowArrow) return;
         nvg::BeginPath();
         if (upShift)
-            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2.5) - vec2(0, animationProgress * animationLength);
+            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength);
         else
-            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2.7) + vec2(0, animationProgress * animationLength);
+            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2) + vec2(0, animationProgress * animationLength);
         nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0)); // Left point
         nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));  // Right point
         if (upShift)
