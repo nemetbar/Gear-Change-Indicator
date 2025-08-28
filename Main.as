@@ -30,56 +30,19 @@ void Render(){
     vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
     vec2 relativePos = vec2(S_PositionX, S_PositionY) * screenSize;
 
-    vec2 arrowSize = vec2(S_Size / 2 - S_Size / 4, S_Size / 2);
     float animationLength = S_Size * 0.6;
     float animationProgress = animationTimer / (S_AnimationLength * 1000);
-    vec2 arrowPos;
 
     if (S_HelpPositionChange){
-        nvg::TextAlign(nvg::Align::Center);
-        nvg::GlobalAlpha(1);
-        nvg::FontFace(nvg::LoadFont("Fonts/Oswald-Regular.ttf"));
-        nvg::FontSize(S_Size);
-        nvg::FillColor(S_Color);
-        nvg::Text(relativePos, "2");
+        RenderText(relativePos, 0);
+        RenderArrow(relativePos, 0, animationLength);
 
-        if (!S_ShowArrow) return;
-        nvg::BeginPath();
-        arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 4);
-        nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0));
-        nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));
-        nvg::LineTo(arrowPos + vec2(0, -arrowSize.y));
-        nvg::ClosePath();
-        nvg::Fill();
         return;
     }
 
     if (animationTimer < S_AnimationLength * 1000){
-        nvg::TextAlign(nvg::Align::Center);
-        nvg::GlobalAlpha(1 - animationProgress);
-        nvg::FontFace(nvg::LoadFont("Fonts/Oswald-Regular.ttf"));
-        nvg::FontSize(S_Size);
-        nvg::FillColor(S_Color);
-        if (curGear == 0)
-            nvg::Text(relativePos, "R");
-        else
-            nvg::Text(relativePos, "" + curGear);
-
-        if (!S_ShowArrow) return;
-        nvg::BeginPath();
-        if (upShift)
-            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength);
-        else
-            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2) + vec2(0, animationProgress * animationLength);
-        nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0)); // Left point
-        nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));  // Right point
-        if (upShift)
-            nvg::LineTo(arrowPos + vec2(0, -arrowSize.y));
-        else
-            nvg::LineTo(arrowPos + vec2(0, arrowSize.y));
-        nvg::ClosePath();
-
-        nvg::Fill();
+        RenderText(relativePos, animationProgress);
+        RenderArrow(relativePos, animationProgress, animationLength);
     }
 }
 
@@ -88,7 +51,6 @@ void Update(uint deltaTime){
 
     auto player = VehicleState::ViewingPlayerState();
     if (player is null) return;
-
 
     // check for gear change
     curGear = player.CurGear;
@@ -107,4 +69,70 @@ void Update(uint deltaTime){
         animationTimer += deltaTime;
     }
 
+}
+
+void RenderText(vec2 relativePos, float animationProgress){
+    if (S_ShowShadow){
+        nvg::TextAlign(nvg::Align::Center);
+        nvg::GlobalAlpha(1 - animationProgress);
+        nvg::FontFace(nvg::LoadFont("Fonts/Oswald-Regular.ttf"));
+        nvg::FontSize(S_Size);
+        nvg::FillColor(S_ShadowColor);
+        if (curGear == 0)
+            nvg::Text(relativePos + vec2(S_Size / 20, S_Size / 20), "R");
+        else
+            nvg::Text(relativePos + vec2(S_Size / 20, S_Size / 20), "" + curGear);
+    }
+
+    nvg::TextAlign(nvg::Align::Center);
+    nvg::GlobalAlpha(1 - animationProgress);
+    nvg::FontFace(nvg::LoadFont("Fonts/Oswald-Regular.ttf"));
+    nvg::FontSize(S_Size);
+    nvg::FillColor(S_Color);
+    if (curGear == 0)
+        nvg::Text(relativePos, "R");
+    else
+        nvg::Text(relativePos, "" + curGear);
+}
+
+
+void RenderArrow(vec2 relativePos, float animationProgress, float animationLength){
+    if (!S_ShowArrow) return;
+
+    vec2 arrowSize = vec2(S_Size / 2 - S_Size / 4, S_Size / 2);
+    vec2 arrowPos;
+
+    if (S_ShowShadow){
+        nvg::FillColor(S_ShadowColor);
+        nvg::BeginPath();
+        if (upShift)
+            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength) + vec2(S_Size / 20, S_Size / 20);
+        else
+            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2) + vec2(0, animationProgress * animationLength) + vec2(S_Size / 20, S_Size / 20);
+        nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0));
+        nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));
+        if (upShift)
+            nvg::LineTo(arrowPos + vec2(0, -arrowSize.y));
+        else
+            nvg::LineTo(arrowPos + vec2(0, arrowSize.y));
+        nvg::ClosePath();
+
+        nvg::Fill();
+    }
+
+    nvg::FillColor(vec4(S_Color));
+    nvg::BeginPath();
+    if (upShift)
+        arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength);
+    else
+        arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2) + vec2(0, animationProgress * animationLength);
+    nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0)); // Left point
+    nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));  // Right point
+    if (upShift)
+        nvg::LineTo(arrowPos + vec2(0, -arrowSize.y));
+    else
+        nvg::LineTo(arrowPos + vec2(0, arrowSize.y));
+    nvg::ClosePath();
+
+    nvg::Fill();
 }
