@@ -13,7 +13,7 @@ float S_PositionY = 0.9;
 [Setting category="Settings" name="Draw Indicator to Help Position Change"]
 bool S_HelpPositionChange = false;
 
-[Setting category="Settings" name="Size" min=10 max=500]
+[Setting category="Settings" name="Size" min=40 max=500]
 int S_Size = 50;
 
 [Setting category="Settings" name="Color" color]
@@ -24,3 +24,15 @@ float S_AnimationLength = 0.3; // seconds
 
 [Setting category="Settings" name="Show Arrow"]
 bool S_ShowArrow = true;
+
+[Setting category="Visibility" name="Shadow Color" color]
+vec4 S_ShadowColor = vec4(0, 0, 0, 1); // black
+
+[Setting category="Visibility" name="Show Shadow"]
+bool S_ShowShadow = true;
+
+[Setting category="Visibility" name="Background Color" color]
+vec4 S_BackgroundColor = vec4(0, 0, 1, 0.5); // transparent blue
+
+[Setting category="Visibility" name="Show Background"]
+bool S_ShowBackground = false;
