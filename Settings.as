@@ -30,3 +30,9 @@ vec4 S_ShadowColor = vec4(0, 0, 0, 1);
 
 [Setting category="Visibility" name="Show Shadow"]
 bool S_ShowShadow = true;
+
+[Setting category="Visibility" name="Background Color" color]
+vec4 S_BackgroundColor = vec4(0, 0, 1, 0.5);
+
+[Setting category="Visibility" name="Show Background"]
+bool S_ShowBackground = false;

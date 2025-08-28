@@ -34,6 +34,7 @@ void Render(){
     float animationProgress = animationTimer / (S_AnimationLength * 1000);
 
     if (S_HelpPositionChange){
+        RenderBackground(relativePos, 0);
         RenderText(relativePos, 0);
         RenderArrow(relativePos, 0, animationLength);
 
@@ -41,6 +42,7 @@ void Render(){
     }
 
     if (animationTimer < S_AnimationLength * 1000){
+        RenderBackground(relativePos, animationProgress);
         RenderText(relativePos, animationProgress);
         RenderArrow(relativePos, animationProgress, animationLength);
     }
@@ -104,6 +106,7 @@ void RenderArrow(vec2 relativePos, float animationProgress, float animationLengt
 
     if (S_ShowShadow){
         nvg::FillColor(S_ShadowColor);
+        nvg::GlobalAlpha(1 - animationProgress);
         nvg::BeginPath();
         if (upShift)
             arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength) + vec2(S_Size / 20, S_Size / 20);
@@ -120,7 +123,8 @@ void RenderArrow(vec2 relativePos, float animationProgress, float animationLengt
         nvg::Fill();
     }
 
-    nvg::FillColor(vec4(S_Color));
+    nvg::FillColor(S_Color);
+    nvg::GlobalAlpha(1 - animationProgress);
     nvg::BeginPath();
     if (upShift)
         arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength);
@@ -136,3 +140,25 @@ void RenderArrow(vec2 relativePos, float animationProgress, float animationLengt
 
     nvg::Fill();
 }
+
+void RenderBackground(vec2 relativePos, float animationProgress){
+    if (!S_ShowBackground) return;
+
+    float widthDiff;
+    if (S_ShowArrow)
+        widthDiff = S_Size / 5;
+    else
+        widthDiff = - S_Size / 3.5;    
+
+    nvg::FillColor(S_BackgroundColor);
+    nvg::GlobalAlpha(1 - animationProgress);
+    nvg::BeginPath();
+    nvg::RoundedRect(
+        relativePos.x - S_Size / 3,
+        relativePos.y - S_Size,
+        S_Size + widthDiff,
+        S_Size + S_Size / 5,
+        S_Size / 3
+    );
+    nvg::Fill();
+}   
