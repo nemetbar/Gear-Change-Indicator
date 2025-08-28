@@ -2,7 +2,7 @@ uint prevGear = 1;
 uint curGear = 1;
 bool upShift = true;
 
-uint animationTimer = 0;
+int animationTimer = 0;
 
 void Main(){
     uint endTime = Time::get_Now();
@@ -74,6 +74,8 @@ void Update(uint deltaTime){
 }
 
 void RenderText(vec2 relativePos, float animationProgress){
+    vec2 shadowOffset = vec2(S_Size / 20, S_Size / 20);
+
     if (S_ShowShadow){
         nvg::TextAlign(nvg::Align::Center);
         nvg::GlobalAlpha(1 - animationProgress);
@@ -81,9 +83,9 @@ void RenderText(vec2 relativePos, float animationProgress){
         nvg::FontSize(S_Size);
         nvg::FillColor(S_ShadowColor);
         if (curGear == 0)
-            nvg::Text(relativePos + vec2(S_Size / 20, S_Size / 20), "R");
+            nvg::Text(relativePos + shadowOffset, "R");
         else
-            nvg::Text(relativePos + vec2(S_Size / 20, S_Size / 20), "" + curGear);
+            nvg::Text(relativePos + shadowOffset, "" + curGear);
     }
 
     nvg::TextAlign(nvg::Align::Center);
@@ -97,21 +99,22 @@ void RenderText(vec2 relativePos, float animationProgress){
         nvg::Text(relativePos, "" + curGear);
 }
 
-
 void RenderArrow(vec2 relativePos, float animationProgress, float animationLength){
     if (!S_ShowArrow) return;
 
     vec2 arrowSize = vec2(S_Size / 2 - S_Size / 4, S_Size / 2);
     vec2 arrowPos;
 
+    vec2 shadowOffset = vec2(S_Size / 20, S_Size / 20);
+
     if (S_ShowShadow){
         nvg::FillColor(S_ShadowColor);
         nvg::GlobalAlpha(1 - animationProgress);
         nvg::BeginPath();
         if (upShift)
-            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength) + vec2(S_Size / 20, S_Size / 20);
+            arrowPos = relativePos + vec2(S_Size / 2, S_Size / 10 - animationProgress * animationLength) + shadowOffset;
         else
-            arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2) + vec2(0, animationProgress * animationLength) + vec2(S_Size / 20, S_Size / 20);
+            arrowPos = relativePos + vec2(S_Size / 2, animationProgress * animationLength - S_Size * 9 / 10) + shadowOffset;
         nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0));
         nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));
         if (upShift)
@@ -127,9 +130,9 @@ void RenderArrow(vec2 relativePos, float animationProgress, float animationLengt
     nvg::GlobalAlpha(1 - animationProgress);
     nvg::BeginPath();
     if (upShift)
-        arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) + vec2(0, S_Size / 2) - vec2(0, animationProgress * animationLength);
+        arrowPos = relativePos + vec2(S_Size / 2, S_Size / 10 - animationProgress * animationLength);
     else
-        arrowPos = relativePos + vec2(S_Size / 2, -S_Size / 2.5) - vec2(0, S_Size / 2) + vec2(0, animationProgress * animationLength);
+        arrowPos = relativePos + vec2(S_Size / 2, animationProgress * animationLength - S_Size * 9 / 10);
     nvg::MoveTo(arrowPos + vec2(-arrowSize.x / 2, 0)); // Left point
     nvg::LineTo(arrowPos + vec2(arrowSize.x / 2, 0));  // Right point
     if (upShift)

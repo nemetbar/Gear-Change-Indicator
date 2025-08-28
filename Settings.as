@@ -26,13 +26,13 @@ float S_AnimationLength = 0.3; // seconds
 bool S_ShowArrow = true;
 
 [Setting category="Visibility" name="Shadow Color" color]
-vec4 S_ShadowColor = vec4(0, 0, 0, 1);
+vec4 S_ShadowColor = vec4(0, 0, 0, 1); // black
 
 [Setting category="Visibility" name="Show Shadow"]
 bool S_ShowShadow = true;
 
 [Setting category="Visibility" name="Background Color" color]
-vec4 S_BackgroundColor = vec4(0, 0, 1, 0.5);
+vec4 S_BackgroundColor = vec4(0, 0, 1, 0.5); // transparent blue
 
 [Setting category="Visibility" name="Show Background"]
 bool S_ShowBackground = false;
